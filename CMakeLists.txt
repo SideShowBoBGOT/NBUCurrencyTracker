@@ -8,7 +8,11 @@ add_library(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC Source)
 
 add_subdirectory(External)
-target_link_libraries(${PROJECT_NAME} PUBLIC drogon)
+target_link_libraries(${PROJECT_NAME}
+        PUBLIC ftxui::screen
+        PUBLIC ftxui::dom
+        PUBLIC ftxui::component
+)
 
 add_executable(Main main.cpp)
 target_link_libraries(Main PRIVATE ${PROJECT_NAME})
