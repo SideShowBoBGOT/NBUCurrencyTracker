@@ -1,3 +1,6 @@
 [submodule "External/drogon"]
 	path = External/drogon
 	url = https://github.com/drogonframework/drogon
+[submodule "External/CLI11"]
+	path = External/CLI11
+	url = https://github.com/CLIUtils/CLI11
