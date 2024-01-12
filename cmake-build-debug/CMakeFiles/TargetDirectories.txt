@@ -1,0 +1,3 @@
+/home/sideshowbobgot/university/CppCurrency/cmake-build-debug/CMakeFiles/CppCurrency.dir
+/home/sideshowbobgot/university/CppCurrency/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/sideshowbobgot/university/CppCurrency/cmake-build-debug/CMakeFiles/rebuild_cache.dir
