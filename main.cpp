@@ -1,75 +1,84 @@
-#include <iostream>
-#include <fstream>
-#include <ftxui/dom/elements.hpp>
-#include <ftxui/screen/screen.hpp>
-#include <ftxui/dom/table.hpp>
+// Copyright 2022 Arthur Sonzogni. All rights reserved.
+// Use of this source code is governed by the MIT license that can be found in
+// the LICENSE file.
+#include <memory>  // for allocator, __shared_ptr_access, shared_ptr
+#include <string>  // for to_string, operator+
+
+#include "ftxui/component/captured_mouse.hpp"  // for ftxui
+#include "ftxui/component/component.hpp"       // for Button, Renderer, Vertical
+#include "ftxui/component/component_base.hpp"  // for ComponentBase
+#include "ftxui/component/component_options.hpp"   // for ButtonOption
+#include "ftxui/component/screen_interactive.hpp"  // for ScreenInteractive
+#include "ftxui/dom/elements.hpp"  // for operator|, text, Element, hbox, separator, size, vbox, border, frame, vscroll_indicator, HEIGHT, LESS_THAN
+#include "ftxui/screen/color.hpp"  // for Color, Color::Default, Color::GrayDark, Color::White
+
+#include <pugixml.hpp>
+
+class TRow : public ftxui::ComponentBase {
+	public:
+	TRow(const std::vector<std::string>& attrs) {
+		auto rendered = ftxui::Elements();
+		const auto attrSize = attrs.size();
+		rendered.reserve(attrSize);
+		for(auto i = 0u; i < attrSize - 1; ++i) {
+			rendered.push_back(ftxui::text(attrs[i]));
+			rendered.push_back(ftxui::separator());
+		}
+		rendered.push_back(ftxui::text(attrs.back()));
+		m_Row = ftxui::hbox(std::move(rendered));
+	}
+
+	public:
+	virtual ftxui::Element Render() override {
+		const auto isActive = Active();
+		const auto isFocused = Focused();
+		const auto focusManagement =  isFocused ? ftxui::focus : isActive ? ftxui::select : ftxui::nothing;
+		return m_Row | focusManagement;
+	}
+
+	virtual bool Focusable() const { return true; }
+
+	protected:
+	ftxui::Element m_Row = nullptr;
+};
 
 int main() {
-//	trantor::Logger::setLogLevel(trantor::Logger::kTrace);
-//	auto client = drogon::HttpClient::newHttpClient("https://bank.gov.ua");
-//	auto req = drogon::HttpRequest::newHttpRequest();
-//	req->setMethod(drogon::Get);
-//	req->setPath("/NBUStatService/v1/statdirectory/exchangenew");
-//	client->sendRequest(req, [](drogon::ReqResult result, const drogon::HttpResponsePtr &response) {
-//		if(result != drogon::ReqResult::Ok) {
-//			std::cout << "error while sending request to server! result: " << result << std::endl;
-//			return;
-//		}
-//		std::ofstream("fff.txt") << response->getBody();
-//	});
-//	drogon::app().run();
+	auto xmlDocument = pugi::xml_document();
+	if(not xmlDocument.load_file("fff.xml")) return -1;
 
-	using namespace ftxui;
+	auto data = std::vector<std::vector<std::string>>();
+	data.push_back({"Id", "Full name", "Rate", "Short name", "Exchange date"});
+	for(const auto& currency : xmlDocument.child("exchange").children("currency")) {
+		auto row = std::vector<std::string>();
+		for(const auto& attr : currency.children()) {
+			row.push_back(attr.child_value());
+		}
+		data.push_back(std::move(row));
+	}
+	for(auto columnIndex = 0u; columnIndex < data.front().size(); ++columnIndex) {
+		auto maxSize = size_t(0);
+		for(const auto& row : data) {
+			maxSize = std::max(maxSize, row[columnIndex].size());
+		}
+		for(auto& row : data) {
+			auto& el = row[columnIndex];
 
-	auto table = Table({
-		{"Version", "Marketing name", "Release date", "API level", "Runtime"},
-		{"2.3", "Gingerbread", "February 9 2011", "10", "Dalvik 1.4.0"},
-		{"4.0", "Ice Cream Sandwich", "October 19 2011", "15", "Dalvik"},
-		{"4.1", "Jelly Bean", "July 9 2012", "16", "Dalvik"},
-		{"4.2", "Jelly Bean", "November 13 2012", "17", "Dalvik"},
-		{"4.3", "Jelly Bean", "July 24 2013", "18", "Dalvik"},
-		{"4.4", "KitKat", "October 31 2013", "19", "Dalvik and ART"},
-		{"5.0", "Lollipop", "November 3 2014", "21", "ART"},
-		{"5.1", "Lollipop", "March 9 2015", "22", "ART"},
-		{"6.0", "Marshmallow", "October 5 2015", "23", "ART"},
-		{"7.0", "Nougat", "August 22 2016", "24", "ART"},
-		{"7.1", "Nougat", "October 4 2016", "25", "ART"},
-		{"8.0", "Oreo", "August 21 2017", "26", "ART"},
-		{"8.1", "Oreo", "December 5 2017", "27", "ART"},
-		{"9", "Pie", "August 6 2018", "28", "ART"},
-		{"10", "10", "September 3 2019", "29", "ART"},
-		{"11", "11", "September 8 2020", "30", "ART"},
+			while(el.size() < maxSize) {
+				el += "X";
+			}
+		}
+	}
+	auto table = ftxui::Container::Vertical({});
+	for(const auto& row : data) {
+		table->Add(ftxui::Make<TRow>(row));
+	}
+
+	auto renderer = ftxui::Renderer(table, [&] {
+		return table->Render() | ftxui::vscroll_indicator | ftxui::frame | ftxui::border;
 	});
 
-	table.SelectAll().Border(LIGHT);
-
-	// Add border around the first column.
-	table.SelectColumn(0).Border(LIGHT);
-
-	// Make first row bold with a double border.
-	table.SelectRow(0).Decorate(bold);
-	table.SelectRow(0).SeparatorVertical(LIGHT);
-	table.SelectRow(0).Border(DOUBLE);
-
-	// Align right the "Release date" column.
-	table.SelectColumn(2).DecorateCells(align_right);
-
-	// Select row from the second to the last.
-	auto content = table.SelectRows(1, -1);
-	// Alternate in between 3 colors.
-	content.DecorateCellsAlternateRow(color(Color::Blue), 3, 0);
-	content.DecorateCellsAlternateRow(color(Color::Cyan), 3, 1);
-	content.DecorateCellsAlternateRow(color(Color::White), 3, 2);
-
-	auto document = table.Render();
-
-
-
-	auto screen = Screen::Create(Dimension::Fit(document));
-	Render(screen, document);
-	screen.Print();
-	std::cout << std::endl;
-
+	auto screen = ftxui::ScreenInteractive::FitComponent();
+	screen.Loop(renderer);
 
 	return 0;
 }

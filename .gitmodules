@@ -4,3 +4,12 @@
 [submodule "External/FTXUI"]
 	path = External/FTXUI
 	url = https://github.com/ArthurSonzogni/FTXUI
+[submodule "External/cpp-httplib"]
+	path = External/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib
+[submodule "External/pugixml"]
+	path = External/pugixml
+	url = https://github.com/zeux/pugixml
+[submodule "External/magic_enum"]
+	path = External/magic_enum
+	url = https://github.com/Neargye/magic_enum

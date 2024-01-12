@@ -1,2 +1,6 @@
 add_subdirectory(CLI11)
 add_subdirectory(FTXUI)
+add_subdirectory(cpp-httplib)
+add_subdirectory(pugixml)
+add_subdirectory(magic_enum)
+add_subdirectory(Lingo)
