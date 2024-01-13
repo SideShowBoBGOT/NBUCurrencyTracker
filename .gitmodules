@@ -1,9 +1,6 @@
 [submodule "External/CLI11"]
 	path = External/CLI11
 	url = https://github.com/CLIUtils/CLI11
-[submodule "External/FTXUI"]
-	path = External/FTXUI
-	url = https://github.com/ArthurSonzogni/FTXUI
 [submodule "External/cpp-httplib"]
 	path = External/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib

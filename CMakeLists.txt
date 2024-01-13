@@ -4,8 +4,10 @@ project(CppCurrency)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(${PROJECT_NAME}
-        Source/CppCurrency/TApplication.cpp
-        Source/CppCurrency/Views/TConsoleUI.cpp)
+        Source/CppCurrency/Views/TConsoleUI.cpp
+        Source/CppCurrency/Views/NSTable.cpp
+        Source/CppCurrency/Controllers/TController.cpp
+        Source/CppCurrency/Views/NSToggle.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC Source)
 
 add_subdirectory(External)
