@@ -12,7 +12,7 @@ add_subdirectory(External)
 target_link_libraries(${PROJECT_NAME} PUBLIC httplib::httplib)
 target_link_libraries(${PROJECT_NAME} PUBLIC pugixml::pugixml)
 target_link_libraries(${PROJECT_NAME} PUBLIC magic_enum::magic_enum)
-target_link_libraries(${PROJECT_NAME} PUBLIC magic_enum::magic_enum)
+target_link_libraries(${PROJECT_NAME} PUBLIC simdutf::simdutf)
 target_link_libraries(${PROJECT_NAME}
         PUBLIC ftxui::screen
         PUBLIC ftxui::dom

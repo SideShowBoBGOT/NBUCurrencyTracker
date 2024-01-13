@@ -13,3 +13,6 @@
 [submodule "External/magic_enum"]
 	path = External/magic_enum
 	url = https://github.com/Neargye/magic_enum
+[submodule "External/simdutf"]
+	path = External/simdutf
+	url = https://github.com/simdutf/simdutf

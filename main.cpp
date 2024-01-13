@@ -3,6 +3,7 @@
 // the LICENSE file.
 #include <memory>  // for allocator, __shared_ptr_access, shared_ptr
 #include <string>  // for to_string, operator+
+#include <ranges>
 
 #include "ftxui/component/captured_mouse.hpp"  // for ftxui
 #include "ftxui/component/component.hpp"       // for Button, Renderer, Vertical
@@ -13,10 +14,11 @@
 #include "ftxui/screen/color.hpp"  // for Color, Color::Default, Color::GrayDark, Color::White
 
 #include <pugixml.hpp>
+#include <simdutf.h>
 
 class TRow : public ftxui::ComponentBase {
 	public:
-	TRow(const std::vector<std::string>& attrs) {
+	TRow(const std::vector<std::string>& attrs, const bool isFirst) {
 		auto rendered = ftxui::Elements();
 		const auto attrSize = attrs.size();
 		rendered.reserve(attrSize);
@@ -26,6 +28,9 @@ class TRow : public ftxui::ComponentBase {
 		}
 		rendered.push_back(ftxui::text(attrs.back()));
 		m_Row = ftxui::hbox(std::move(rendered));
+		if(isFirst) {
+			m_Row = ftxui::vbox(m_Row, ftxui::separator());
+		}
 	}
 
 	public:
@@ -58,19 +63,20 @@ int main() {
 	for(auto columnIndex = 0u; columnIndex < data.front().size(); ++columnIndex) {
 		auto maxSize = size_t(0);
 		for(const auto& row : data) {
-			maxSize = std::max(maxSize, row[columnIndex].size());
+			const auto& el = row[columnIndex];
+			maxSize = std::max(maxSize, simdutf::count_utf8(el.data(), el.size()));
 		}
 		for(auto& row : data) {
 			auto& el = row[columnIndex];
-
-			while(el.size() < maxSize) {
-				el += "X";
+			while(simdutf::count_utf8(el.data(), el.size()) < maxSize) {
+				el += " ";
 			}
 		}
 	}
 	auto table = ftxui::Container::Vertical({});
-	for(const auto& row : data) {
-		table->Add(ftxui::Make<TRow>(row));
+	table->Add(ftxui::Make<TRow>(data.front(), true));
+	for(const auto& row : data | std::views::drop(1)) {
+		table->Add(ftxui::Make<TRow>(row, false));
 	}
 
 	auto renderer = ftxui::Renderer(table, [&] {
