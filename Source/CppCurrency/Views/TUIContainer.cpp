@@ -2,18 +2,18 @@
 #include <CppCurrency/Models/NNFileType.hpp>
 #include <CppCurrency/Views/NSToggle.hpp>
 #include <CppCurrency/Views/TCurrencyDataView.hpp>
-#include <CppCurrency/Models/SCurrencyData.hpp>
+#include <CppCurrency/Views/TCurrencyTable.hpp>
+#include <CppCurrency/Models/ACurrencyData.hpp>
 #include <ftxui/component/component.hpp>
 #include <magic_enum.hpp>
 
 namespace curr {
 
 TUIContainer::TUIContainer() {
-	const auto tableBody = ftxui::Container::Vertical({});
-
-	const auto vContainer = ftxui::Container::Vertical({
+	m_CurrencyTable = std::make_shared<TCurrencyTable>();
+	m_Component = ftxui::Container::Vertical({
 		CreateFileTypeToggle(),
-		CreateTableHeader(),
+		m_CurrencyTable->Component()
 	});
 }
 
@@ -34,18 +34,8 @@ ftxui::Component TUIContainer::CreateFileTypeToggle() {
 	return NSToggle::New(variants);
 }
 
-ftxui::Component TUIContainer::CreateTableHeader() const {
-	return ftxui::Make<TCurrencyDataView>(
-		SCurrencyData("Id", "Full name", "Rate", "Short name", "Exchange date"));
-}
-
 void TUIContainer::UpdateCurrencyTable(AProvideResult&& result) {
-	if(std::holds_alternative<ACurrencyError>(result)) {
-		m_TableErrorMessage = std::move(std::get<ACurrencyError>(result));
-		return;
-	}
-
-
+	m_CurrencyTable->Update(std::move(result));
 }
 
 }

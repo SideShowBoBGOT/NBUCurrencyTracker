@@ -4,7 +4,7 @@
 
 namespace curr::NSToggle {
 
-std::function<void()> OnButtonClickDecorator(const std::function<void()>& func) {
+static std::function<void()> OnButtonClickDecorator(const std::function<void()>& func) {
 	return [func]() { if(func) func(); };
 }
 

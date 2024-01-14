@@ -20,7 +20,7 @@ class TController {
 
 	protected:
 	ftxui::ScreenInteractive m_Screen = ftxui::ScreenInteractive::FitComponent();
-	std::unique_ptr<TUIContainer> m_UIContainer = nullptr;
+	std::shared_ptr<TUIContainer> m_UIContainer = nullptr;
 };
 
 }

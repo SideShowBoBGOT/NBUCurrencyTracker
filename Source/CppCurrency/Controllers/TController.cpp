@@ -8,7 +8,7 @@ namespace curr {
 static constexpr std::string_view s_OutputFileName = "fff.txt";
 
 TController::TController()
-	: m_UIContainer{std::make_unique<TUIContainer>()} {}
+	: m_UIContainer{std::make_shared<TUIContainer>()} {}
 
 void TController::Run() {
 	auto clientThread = std::jthread([this]() { ClientThread(); });
@@ -16,12 +16,12 @@ void TController::Run() {
 }
 
 void TController::ClientThread() {
-	while(true) {
+	//while(true) {
 		m_Screen.Post([this, data=NSProvider::Do(m_UIContainer->FileType())]() mutable {
 			m_UIContainer->UpdateCurrencyTable(std::move(data));
 		});
-		while(true);
-	}
+		m_Screen.PostEvent(ftxui::Event::Custom);
+	//}
 }
 
 }

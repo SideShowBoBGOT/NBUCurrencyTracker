@@ -1,17 +1,16 @@
 #include <CppCurrency/Views/TCurrencyDataView.hpp>
-#include <CppCurrency/Models/SCurrencyData.hpp>
 
 namespace curr {
 
-TCurrencyDataView::TCurrencyDataView(SCurrencyData&& data) {
+TCurrencyDataView::TCurrencyDataView(ACurrencyData&& data) {
 	auto rendered = ftxui::Elements();
-	const auto attrSize = data.Attrs.size();
+	const auto attrSize = data.size();
 	rendered.reserve(attrSize);
 	for(auto i = 0u; i < attrSize - 1; ++i) {
-		rendered.push_back(ftxui::text(std::move(data.Attrs[i])));
+		rendered.push_back(ftxui::text(std::move(data[i])));
 		rendered.push_back(ftxui::separator());
 	}
-	rendered.push_back(ftxui::text(std::move(data.Attrs.back())));
+	rendered.push_back(ftxui::text(std::move(data.back())));
 	m_Row = ftxui::hbox(std::move(rendered));
 }
 

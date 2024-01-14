@@ -1,15 +1,14 @@
 #ifndef CPPCURRENCY_TCURRENCYDATAVIEW_HPP
 #define CPPCURRENCY_TCURRENCYDATAVIEW_HPP
 
+#include <CppCurrency/Models/ACurrencyData.hpp>
 #include <ftxui/component/component_base.hpp>
 
 namespace curr {
 
-struct SCurrencyData;
-
 class TCurrencyDataView : public ftxui::ComponentBase {
 	public:
-	TCurrencyDataView(SCurrencyData&& data);
+	TCurrencyDataView(ACurrencyData&& data);
 
 	public:
 	virtual ftxui::Element Render() override;

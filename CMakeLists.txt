@@ -4,14 +4,12 @@ project(CppCurrency)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(${PROJECT_NAME}
-        Source/CppCurrency/Views/TConsoleUI.cpp
-        Source/CppCurrency/Views/NSTable.cpp
         Source/CppCurrency/Controllers/TController.cpp
         Source/CppCurrency/Views/NSToggle.cpp
         Source/CppCurrency/Controllers/NSProvider.cpp
-        Source/CppCurrency/Models/SCurrencyData.cpp
         Source/CppCurrency/Views/TUIContainer.cpp
-        Source/CppCurrency/Views/TCurrencyDataView.cpp)
+        Source/CppCurrency/Views/TCurrencyDataView.cpp
+        Source/CppCurrency/Views/TCurrencyTable.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC Source)
 
 add_subdirectory(External)

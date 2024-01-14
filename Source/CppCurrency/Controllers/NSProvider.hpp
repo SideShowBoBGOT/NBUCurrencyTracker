@@ -2,7 +2,7 @@
 #define CPPCURRENCY_NSPROVIDER_HPP
 
 #include <CppCurrency/Models/NNFileType.hpp>
-#include <CppCurrency/Models/SCurrencyData.hpp>
+#include <CppCurrency/Models/ACurrencyData.hpp>
 
 namespace curr::NSProvider {
 
