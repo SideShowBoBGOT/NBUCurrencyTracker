@@ -1,7 +1,7 @@
 #ifndef CPPCURRENCY_TCONSOLEUI_HPP
 #define CPPCURRENCY_TCONSOLEUI_HPP
 
-#include <CppCurrency/Views/NNFileType.hpp>
+#include "CppCurrency/Models/NNFileType.hpp"
 
 #include <ftxui/component/component_base.hpp>
 

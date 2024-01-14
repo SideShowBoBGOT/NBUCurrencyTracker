@@ -20,10 +20,13 @@ int main() {
 	}
 
 	const auto table = curr::NSTable::New(std::move(data));
-	constexpr auto rr = std::array{"JSON", "XML", "CSV"};
-	const auto toggle = curr::NSToggle::New({std::make_pair(rr[0], nullptr), std::make_pair(rr[1], nullptr), std::make_pair(rr[2], nullptr)});
-	const auto vert = ftxui::Renderer(ftxui::Container::Vertical({toggle, table}), [toggle, table]() {
-		return ftxui::vbox(toggle->Render() | ftxui::size(ftxui::HEIGHT, ftxui::GREATER_THAN, 5) , table->Render());
+	const auto toggle = curr::NSToggle({std::make_pair("JSON", nullptr), std::make_pair("XML", nullptr), std::make_pair("CSV", nullptr)});
+	const auto toggleComponent = toggle.Component();
+	const auto vert = ftxui::Renderer(ftxui::Container::Vertical({toggle.Component(), table}), [toggle, table]() {
+		return ftxui::vbox(
+			ftxui::hbox(ftxui::text("File type: "), toggle->Render(), ftxui::separator()),
+			table->Render()
+		);
 	});
 
 	auto screen = ftxui::ScreenInteractive::FitComponent();

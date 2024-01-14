@@ -6,46 +6,7 @@
 
 namespace curr::NSTable {
 
-class TRow : public ftxui::ComponentBase {
-	public:
-	TRow(std::vector<std::string>&& attrs);
 
-	public:
-	virtual ftxui::Element Render() override;
-	virtual bool Focusable() const override;
-
-	protected:
-	ftxui::Element m_Row = nullptr;
-};
-
-TRow::TRow(std::vector<std::string>&& attrs) {
-	auto rendered = ftxui::Elements();
-	const auto attrSize = attrs.size();
-	rendered.reserve(attrSize);
-	for(auto i = 0u; i < attrSize - 1; ++i) {
-		rendered.push_back(ftxui::text(std::move(attrs[i])));
-		rendered.push_back(ftxui::separator());
-	}
-	rendered.push_back(ftxui::text(std::move(attrs.back())));
-	m_Row = ftxui::hbox(std::move(rendered));
-}
-
-ftxui::Element TRow::Render() {
-	using TFocusManagement = std::shared_ptr<ftxui::Node>(*)(std::shared_ptr<ftxui::Node>);
-	TFocusManagement focusManagement = nullptr;
-	if(Focused()) {
-		focusManagement = ftxui::focus;
-	} else if(Active()) {
-		focusManagement = ftxui::select;
-	} else {
-		focusManagement = ftxui::nothing;
-	}
-	return m_Row | focusManagement;
-}
-
-bool TRow::Focusable() const {
-	return true;
-}
 
 void ArrangeColumns(std::vector<std::vector<std::string>>& data) {
 	for(auto columnIndex = 0u; columnIndex < data.front().size(); ++columnIndex) {
