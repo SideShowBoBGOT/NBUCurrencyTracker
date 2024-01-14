@@ -1,6 +1,7 @@
 #include <CppCurrency/Controllers/TController.hpp>
 #include <CppCurrency/Views/TUIContainer.hpp>
 #include <CppCurrency/Controllers/NSProvider.hpp>
+#include <CppCurrency/Helpers/TIntervalClosure.hpp>
 #include <thread>
 
 namespace curr {
@@ -16,12 +17,18 @@ void TController::Run() {
 }
 
 void TController::ClientThread() {
-	//while(true) {
+	using namespace std::chrono_literals;
+	auto uiTimeUpdator = TIntervalClosure(1s, [this]() { m_Screen.PostEvent(ftxui::Event::Custom); });
+	auto dataUpdator = TIntervalClosure(5s, [this]() {
 		m_Screen.Post([this, data=NSProvider::Do(m_UIContainer->FileType())]() mutable {
 			m_UIContainer->UpdateCurrencyTable(std::move(data));
 		});
 		m_Screen.PostEvent(ftxui::Event::Custom);
-	//}
+	});
+	while(true) {
+		uiTimeUpdator.Update();
+		dataUpdator.Update();
+	}
 }
 
 }

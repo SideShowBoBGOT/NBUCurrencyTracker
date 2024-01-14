@@ -1,19 +1,32 @@
 #include <CppCurrency/Views/TUIContainer.hpp>
 #include <CppCurrency/Models/NNFileType.hpp>
 #include <CppCurrency/Views/NSToggle.hpp>
-#include <CppCurrency/Views/TCurrencyDataView.hpp>
 #include <CppCurrency/Views/TCurrencyTable.hpp>
 #include <CppCurrency/Models/ACurrencyData.hpp>
 #include <ftxui/component/component.hpp>
 #include <magic_enum.hpp>
+#include <format>
 
 namespace curr {
 
+static constexpr std::string_view s_FileTypeToggle = "File type";
+
 TUIContainer::TUIContainer() {
 	m_CurrencyTable = std::make_shared<TCurrencyTable>();
-	m_Component = ftxui::Container::Vertical({
-		CreateFileTypeToggle(),
-		m_CurrencyTable->Component()
+	const auto toggle = CreateFileTypeToggle();
+	const auto table = m_CurrencyTable->Component();
+	m_Component = ftxui::Container::Vertical({toggle, table});
+	m_Component = ftxui::Renderer(m_Component, [toggle, table]() {
+		auto tp = std::chrono::system_clock::now();
+		tp = std::chrono::time_point_cast<std::chrono::seconds>(tp);
+		auto stp = ftxui::text(std::format("{:%Y-%m-%d %H:%M:%S}", tp));
+		stp = ftxui::hbox(ftxui::text("Current time"), ftxui::separator(), stp);
+		return ftxui::vbox(
+			toggle->Render(),
+			ftxui::separator(),
+			std::move(stp),
+			ftxui::separator(),
+			table->Render()) | ftxui::borderDouble;
 	});
 }
 
@@ -31,7 +44,13 @@ ftxui::Component TUIContainer::CreateFileTypeToggle() {
 		const auto name = magic_enum::enum_name<NFileType>(value);
 		variants.emplace_back(name, [this, value]() { m_FileType.store(value); });
 	}
-	return NSToggle::New(variants);
+	const auto toggle = NSToggle::New(variants);
+	return ftxui::Renderer(toggle, [toggle]() {
+		return ftxui::hbox(
+			ftxui::text(s_FileTypeToggle.data()),
+			ftxui::separator(), toggle->Render()
+		);
+	});;
 }
 
 void TUIContainer::UpdateCurrencyTable(AProvideResult&& result) {
