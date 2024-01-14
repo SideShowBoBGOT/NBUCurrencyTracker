@@ -9,6 +9,7 @@ static const ACurrencyData s_Header = {"Id", "Full name", "Rate", "Short name", 
 
 TCurrencyTable::TCurrencyTable() {
 	m_Header = ftxui::Container::Vertical({});
+	m_Header->Add(ftxui::Make<TCurrencyDataView>(ACurrencyData(s_Header)));
 	m_Body = ftxui::Container::Vertical({});
 	m_RenderTable = ftxui::Container::Vertical({m_Header, m_Body});
 	m_RenderTable = ftxui::Renderer(m_RenderTable, [this]() {
