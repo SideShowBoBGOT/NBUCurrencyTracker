@@ -26,7 +26,6 @@ static const std::string s_sExchange = "exchange";
 static const std::string s_sCurrency = "currency";
 static const std::string s_sOutputFile = "output.txt";
 static const std::string s_sLoggerName = "ProvideLogger";
-
 static const std::string s_sSaveDataToReport = "SaveDataToReport: ";
 static const std::string s_sReadJson = "ReadJson: ";
 static const std::string s_sReadXml = "ReadXml: ";
@@ -128,5 +127,3 @@ AProvideResult Do(const curr::NFileType fileType) {
 }
 
 }
-
-

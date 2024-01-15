@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_library(${PROJECT_NAME}
         Source/CppCurrency/Controllers/TController.cpp
-        Source/CppCurrency/Views/NSToggle.cpp
+        Source/CppCurrency/Views/TToggle.cpp
         Source/CppCurrency/Controllers/NSProvider.cpp
         Source/CppCurrency/Views/TUIContainer.cpp
         Source/CppCurrency/Views/TCurrencyDataView.cpp

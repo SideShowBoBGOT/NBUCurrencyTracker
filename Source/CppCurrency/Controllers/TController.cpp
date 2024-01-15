@@ -4,7 +4,7 @@
 #include <CppCurrency/Helpers/TIntervalClosure.hpp>
 
 #include <spdlog/spdlog.h>
-#include "spdlog/async.h"
+#include <spdlog/async.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
 #include <thread>
@@ -24,7 +24,6 @@ void TController::Run() {
 
 void TController::ClientThread() {
 	using namespace std::chrono_literals;
-	// provider lives long enough, so it is relatively safe to store the reference
 	auto dataUpdator = TIntervalClosure(5s, [this]() {
 		m_xScreen.Post([this, data=NSProvider::Do(m_pUIContainer->FileType())]() mutable {
 			m_pUIContainer->UpdateCurrencyTable(std::move(data));

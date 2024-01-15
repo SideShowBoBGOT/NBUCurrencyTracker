@@ -5,8 +5,8 @@ namespace curr {
 
 namespace NNFileType {
 	enum NFileType {
-		JSON,
-		XML
+		XML,
+		JSON
 	};
 }
 

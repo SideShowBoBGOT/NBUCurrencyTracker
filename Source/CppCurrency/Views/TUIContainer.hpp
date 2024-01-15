@@ -9,6 +9,7 @@
 namespace curr {
 
 class TCurrencyTable;
+class TToggle;
 
 class TUIContainer {
 	public:
@@ -20,11 +21,13 @@ class TUIContainer {
 	void UpdateCurrencyTable(AProvideResult&& result);
 
 	protected:
-	ftxui::Component CreateFileTypeToggle();
+	ftxui::Component CreateInitFileTypeToggle();
+	ftxui::Component CreateInitCurrencyTable();
+	static ftxui::Element RenderTime();
 
 	protected:
-	std::atomic_int32_t m_iFileType = static_cast<int>(NFileType::JSON);
 	std::shared_ptr<TCurrencyTable> m_pCurrencyTable = nullptr;
+	std::shared_ptr<TToggle> m_pFileTypeToggle = nullptr;
 	ftxui::Component m_pComponent = nullptr;
 };
 
