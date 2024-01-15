@@ -11,7 +11,7 @@ TCurrencyDataView::TCurrencyDataView(ACurrencyData&& data) {
 		rendered.push_back(ftxui::separator());
 	}
 	rendered.push_back(ftxui::text(std::move(data.back())));
-	m_Row = ftxui::hbox(std::move(rendered));
+	m_pRow = ftxui::hbox(std::move(rendered));
 }
 
 ftxui::Element TCurrencyDataView::Render() {
@@ -24,7 +24,7 @@ ftxui::Element TCurrencyDataView::Render() {
 	} else {
 		focusManagement = ftxui::nothing;
 	}
-	return m_Row | focusManagement;
+	return m_pRow | focusManagement;
 }
 
 bool TCurrencyDataView::Focusable() const {

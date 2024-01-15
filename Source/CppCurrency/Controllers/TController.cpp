@@ -2,29 +2,36 @@
 #include <CppCurrency/Views/TUIContainer.hpp>
 #include <CppCurrency/Controllers/NSProvider.hpp>
 #include <CppCurrency/Helpers/TIntervalClosure.hpp>
+
+#include <spdlog/spdlog.h>
+#include "spdlog/async.h"
+#include <spdlog/sinks/basic_file_sink.h>
+
 #include <thread>
 
 namespace curr {
 
-static constexpr std::string_view s_OutputFileName = "fff.txt";
-
 TController::TController()
-	: m_UIContainer{std::make_shared<TUIContainer>()} {}
+	: m_pUIContainer{std::make_shared<TUIContainer>()} {}
 
 void TController::Run() {
+	spdlog::set_default_logger(
+		spdlog::create_async<spdlog::sinks::basic_file_sink_mt>("ProvideLogger", "logs.txt")
+	);
 	auto clientThread = std::jthread([this]() { ClientThread(); });
-	m_Screen.Loop(m_UIContainer->Component());
+	m_xScreen.Loop(m_pUIContainer->Component());
 }
 
 void TController::ClientThread() {
 	using namespace std::chrono_literals;
-	auto uiTimeUpdator = TIntervalClosure(1s, [this]() { m_Screen.PostEvent(ftxui::Event::Custom); });
+	// provider lives long enough, so it is relatively safe to store the reference
 	auto dataUpdator = TIntervalClosure(5s, [this]() {
-		m_Screen.Post([this, data=NSProvider::Do(m_UIContainer->FileType())]() mutable {
-			m_UIContainer->UpdateCurrencyTable(std::move(data));
+		m_xScreen.Post([this, data=NSProvider::Do(m_pUIContainer->FileType())]() mutable {
+			m_pUIContainer->UpdateCurrencyTable(std::move(data));
 		});
-		m_Screen.PostEvent(ftxui::Event::Custom);
+		m_xScreen.PostEvent(ftxui::Event::Custom);
 	});
+	auto uiTimeUpdator = TIntervalClosure(1s, [this]() { m_xScreen.PostEvent(ftxui::Event::Custom); });
 	while(true) {
 		uiTimeUpdator.Update();
 		dataUpdator.Update();

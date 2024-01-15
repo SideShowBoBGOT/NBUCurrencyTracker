@@ -19,8 +19,8 @@ class TController {
 	void ClientThread();
 
 	protected:
-	ftxui::ScreenInteractive m_Screen = ftxui::ScreenInteractive::FitComponent();
-	std::shared_ptr<TUIContainer> m_UIContainer = nullptr;
+	ftxui::ScreenInteractive m_xScreen = ftxui::ScreenInteractive::FitComponent();
+	std::shared_ptr<TUIContainer> m_pUIContainer = nullptr;
 };
 
 }

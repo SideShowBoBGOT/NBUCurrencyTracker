@@ -23,9 +23,9 @@ class TUIContainer {
 	ftxui::Component CreateFileTypeToggle();
 
 	protected:
-	std::atomic_int32_t m_FileType = static_cast<int>(NFileType::XML);
-	std::shared_ptr<TCurrencyTable> m_CurrencyTable = nullptr;
-	ftxui::Component m_Component = nullptr;
+	std::atomic_int32_t m_iFileType = static_cast<int>(NFileType::JSON);
+	std::shared_ptr<TCurrencyTable> m_pCurrencyTable = nullptr;
+	ftxui::Component m_pComponent = nullptr;
 };
 
 }

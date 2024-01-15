@@ -3,11 +3,15 @@
 
 #include <CppCurrency/Models/NNFileType.hpp>
 #include <CppCurrency/Models/ACurrencyData.hpp>
+#include <filesystem>
+#include <memory>
+
+namespace spdlog {
+class logger;
+}
 
 namespace curr::NSProvider {
-
-AProvideResult Do(const NFileType fileType);
-
+	AProvideResult Do(const NFileType fileType);
 }
 
 #endif //CPPCURRENCY_NSPROVIDER_HPP

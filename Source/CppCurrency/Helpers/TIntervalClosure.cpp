@@ -3,13 +3,13 @@
 namespace curr {
 
 TIntervalClosure::TIntervalClosure(std::chrono::nanoseconds interval, const std::function<void()>& closure)
-	: m_Interval{interval}, m_LastTime{std::chrono::system_clock::now()}, m_Closure{closure} {}
+	: m_tInterval{interval}, m_tLastTime{std::chrono::system_clock::now()}, m_fClosure{closure} {}
 
 void TIntervalClosure::Update() {
 	const auto currentTime = std::chrono::system_clock::now();
-	if(currentTime - m_LastTime > m_Interval) {
-		m_Closure();
-		m_LastTime = currentTime;
+	if(currentTime - m_tLastTime > m_tInterval) {
+		m_fClosure();
+		m_tLastTime = currentTime;
 	}
 }
 

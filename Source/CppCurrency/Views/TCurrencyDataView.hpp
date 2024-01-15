@@ -15,7 +15,7 @@ class TCurrencyDataView : public ftxui::ComponentBase {
 	virtual bool Focusable() const override;
 
 	protected:
-	ftxui::Element m_Row = nullptr;
+	ftxui::Element m_pRow = nullptr;
 };
 
 }

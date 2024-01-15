@@ -20,6 +20,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC pugixml::pugixml)
 target_link_libraries(${PROJECT_NAME} PUBLIC magic_enum::magic_enum)
 target_link_libraries(${PROJECT_NAME} PUBLIC simdutf::simdutf)
 target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${PROJECT_NAME}
         PUBLIC ftxui::screen
         PUBLIC ftxui::dom

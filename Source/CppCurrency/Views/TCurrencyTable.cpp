@@ -5,38 +5,38 @@
 
 namespace curr {
 
-static const ACurrencyData s_Header = {"Id", "Full name", "Rate", "Short name", "Exchange date"};
+static const ACurrencyData s_xHeader = {"Id", "Full name", "Rate", "Short name", "Exchange date"};
 
 TCurrencyTable::TCurrencyTable() {
-	m_Header = ftxui::Container::Vertical({});
-	m_Header->Add(ftxui::Make<TCurrencyDataView>(ACurrencyData(s_Header)));
-	m_Body = ftxui::Container::Vertical({});
-	m_RenderTable = ftxui::Container::Vertical({m_Header, m_Body});
-	m_RenderTable = ftxui::Renderer(m_RenderTable, [this]() {
-		const auto bodyRender = m_IsError ? ftxui::text(m_ErrorMessage)
-			: m_Body->Render() | ftxui::vscroll_indicator | ftxui::frame;
-		return ftxui::vbox(m_Header->Render(), ftxui::separator(), bodyRender);
+	m_pHeader = ftxui::Container::Vertical({});
+	m_pHeader->Add(ftxui::Make<TCurrencyDataView>(ACurrencyData(s_xHeader)));
+	m_pBody = ftxui::Container::Vertical({});
+	m_pRenderTable = ftxui::Container::Vertical({m_pHeader, m_pBody});
+	m_pRenderTable = ftxui::Renderer(m_pRenderTable, [this]() {
+		const auto bodyRender = m_bIsError ? ftxui::text(m_sErrorMessage)
+			: m_pBody->Render() | ftxui::vscroll_indicator | ftxui::frame;
+		return ftxui::vbox(m_pHeader->Render(), ftxui::separator(), bodyRender);
 	});
 }
 
 const ftxui::Component& TCurrencyTable::Component() const {
-	return m_RenderTable;
+	return m_pRenderTable;
 }
 
 void TCurrencyTable::Update(AProvideResult&& result) {
-	m_IsError = std::holds_alternative<ACurrencyError>(result);
-	if(m_IsError) {
-		m_ErrorMessage = std::move(std::get<ACurrencyError>(result));
+	m_bIsError = std::holds_alternative<ACurrencyError>(result);
+	if(m_bIsError) {
+		m_sErrorMessage = std::move(std::get<ACurrencyError>(result));
 		return;
 	}
-	m_Header->DetachAllChildren();
-	m_Body->DetachAllChildren();
-	auto headerData = s_Header;
+	m_pHeader->DetachAllChildren();
+	m_pBody->DetachAllChildren();
+	auto headerData = s_xHeader;
 	auto bodyData = std::move(std::get<ACurrencyVector>(result));
 	ArrangeTable(headerData, bodyData);
-	m_Header->Add(ftxui::Make<TCurrencyDataView>(std::move(headerData)));
+	m_pHeader->Add(ftxui::Make<TCurrencyDataView>(std::move(headerData)));
 	for(auto& row : bodyData) {
-		m_Body->Add(ftxui::Make<TCurrencyDataView>(std::move(row)));
+		m_pBody->Add(ftxui::Make<TCurrencyDataView>(std::move(row)));
 	}
 }
 

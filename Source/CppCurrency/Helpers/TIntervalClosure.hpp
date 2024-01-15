@@ -14,9 +14,9 @@ class TIntervalClosure {
 	void Update();
 
 	protected:
-	std::chrono::nanoseconds m_Interval;
-	std::chrono::system_clock::time_point m_LastTime;
-	std::function<void()> m_Closure = nullptr;
+	std::chrono::nanoseconds m_tInterval;
+	std::chrono::system_clock::time_point m_tLastTime;
+	std::function<void()> m_fClosure = nullptr;
 };
 
 }

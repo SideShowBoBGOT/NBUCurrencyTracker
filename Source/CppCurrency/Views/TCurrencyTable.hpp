@@ -20,11 +20,11 @@ class TCurrencyTable {
 	static size_t CountUTF8Chars(const std::string& str);
 
 	protected:
-	bool m_IsError = false;
-	std::string m_ErrorMessage;
-	ftxui::Component m_Header = nullptr;
-	ftxui::Component m_Body = nullptr;
-	ftxui::Component m_RenderTable = nullptr;
+	bool m_bIsError = false;
+	std::string m_sErrorMessage;
+	ftxui::Component m_pHeader = nullptr;
+	ftxui::Component m_pBody = nullptr;
+	ftxui::Component m_pRenderTable = nullptr;
 };
 
 }
