@@ -8,13 +8,15 @@ namespace curr {
 
 class TIntervalClosure {
 	public:
-	TIntervalClosure(std::chrono::nanoseconds interval, const std::function<void()>& closure);
+	TIntervalClosure(std::chrono::seconds interval, const std::function<void()>& closure);
 
 	public:
 	void Update();
 
+	public:
+	std::chrono::seconds Interval = std::chrono::seconds(0);
+
 	protected:
-	std::chrono::nanoseconds m_tInterval;
 	std::chrono::system_clock::time_point m_tLastTime;
 	std::function<void()> m_fClosure = nullptr;
 };

@@ -1,5 +1,5 @@
 #include <CppCurrency/Views/TUIContainer.hpp>
-#include <CppCurrency/Models/NNFileType.hpp>
+#include "CppCurrency/Controllers/NNFileType.hpp"
 #include <CppCurrency/Views/TToggle.hpp>
 #include <CppCurrency/Views/TCurrencyTable.hpp>
 #include <CppCurrency/Views/TIntervalModal.hpp>
@@ -11,26 +11,26 @@
 namespace curr {
 
 static constexpr auto s_vFileTypes = magic_enum::enum_names<NFileType>();
-static constexpr std::string_view s_sFileTypeToggle = "File type     ";
-static constexpr std::string_view s_sCurrentTime 	= "Current time  ";
-static constexpr std::string_view s_sIntervalInput 	= "Interval input";
+static constexpr std::string_view s_sFileTypeToggle = "File type      ";
+static constexpr std::string_view s_sCurrentTime 	= "Current time   ";
+static constexpr std::string_view s_sChangeInterval = "Change interval";
 
 TUIContainer::TUIContainer() {
-	const auto interval = CreateInitIntervalInput();
+	const auto changeIntervalButton = CreateChangeIntervalButton();
 	const auto toggle = CreateInitFileTypeToggle();
 	const auto table = CreateInitCurrencyTable();
-	m_pComponent = ftxui::Container::Vertical({toggle, interval, table});
-	m_pComponent = ftxui::Renderer(m_pComponent, [toggle, interval, table]() {
+	m_pComponent = ftxui::Container::Vertical({toggle, changeIntervalButton, table});
+	m_pComponent = ftxui::Renderer(m_pComponent, [toggle, changeIntervalButton, table]() {
 		return ftxui::vbox(
-			toggle->Render(),
-			ftxui::separator(),
 			RenderTime(),
 			ftxui::separator(),
-			interval->Render(),
+			toggle->Render(),
+			ftxui::separator(),
+			changeIntervalButton->Render(),
 			ftxui::separator(),
 			table->Render()
 		) | ftxui::borderDouble;
-	});
+	}) | m_pIntervalModal->ModalClosure();
 }
 
 NFileType TUIContainer::FileType() const {
@@ -70,14 +70,15 @@ ftxui::Element TUIContainer::RenderTime() {
 	return ftxui::hbox(ftxui::text(s_sCurrentTime.data()), ftxui::separator(), stp);
 }
 
-ftxui::Component TUIContainer::CreateInitIntervalInput() {
-	m_pIntervalInput = std::make_shared<TIntervalModal>();
-	const auto interval = m_pIntervalInput->Component();
-	return ftxui::Renderer(interval, [interval]() {
+ftxui::Component TUIContainer::CreateChangeIntervalButton() {
+	m_pIntervalModal = std::make_shared<TIntervalModal>();
+	auto button = ftxui::Button(s_sChangeInterval.data(),
+		[this] { m_pIntervalModal->Show(true); }, ftxui::ButtonOption::Animated());
+	return ftxui::Renderer(button, [button]() {
 		return ftxui::hbox(
-			ftxui::text(s_sIntervalInput.data()),
+			button->Render(),
 			ftxui::separator(),
-			interval->Render()
+			ftxui::text("")
 		);
 	});
 }

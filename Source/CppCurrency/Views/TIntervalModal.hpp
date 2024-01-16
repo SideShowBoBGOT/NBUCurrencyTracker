@@ -10,13 +10,14 @@ class TIntervalModal {
 	TIntervalModal();
 
 	public:
-	const ftxui::Component& Component() const;
+	using TModalClosure = std::function<ftxui::Component(ftxui::Component)>;
+	const TModalClosure& ModalClosure() const;
+	void Show(const bool isShow);
 
 	protected:
-	static bool FilterDigits(ftxui::Event event);
+	static auto FilterDigits(std::string* s);
 
 	protected:
-	ftxui::Component m_pComponent = nullptr;
 	ftxui::Component m_pHoursInput = nullptr;
 	ftxui::Component m_pMinutesInput = nullptr;
 	ftxui::Component m_pSecondsInput = nullptr;
@@ -29,6 +30,12 @@ class TIntervalModal {
 	std::string m_sHours;
 	std::string m_sMinutes;
 	std::string m_sSeconds;
+
+	protected:
+
+	protected:
+	bool m_bIsShow = false;
+	TModalClosure m_fClosure = nullptr;
 };
 
 }
