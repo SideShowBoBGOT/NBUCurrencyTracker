@@ -13,10 +13,14 @@ class TIntervalClosure;
 
 class TController {
 	public:
+	static TController& Instance();
+
+	protected:
 	TController();
 
 	public:
 	void Run();
+	void SendMessage(const NMessages::Type& message);
 
 	protected:
 	void ClientThread();

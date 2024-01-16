@@ -6,11 +6,10 @@ namespace curr {
 static const auto s_xButtonStyle = ftxui::ButtonOption::Animated(ftxui::Color::Default,
 	ftxui::Color::Default, ftxui::Color::Default, ftxui::Color::Default);
 
-TToggle::TToggle(const std::vector<std::string_view>& variants) {
+TToggle::TToggle(const std::vector<std::pair<std::string_view, std::function<void()>>>& variants) {
 	m_pButtons = ftxui::Container::Horizontal({});
-	for(auto i = 0; i < variants.size(); ++i) {
-		m_pButtons->Add(ftxui::Button(variants[i].data(),
-			[this, i]() { m_iSelected.store(i); }, s_xButtonStyle));
+	for(const auto& [name, func] : variants) {
+		m_pButtons->Add(ftxui::Button(name.data(), func, s_xButtonStyle));
 	}
 
 	m_pComponent = ftxui::Renderer(m_pButtons, [this]() {
@@ -31,11 +30,6 @@ const ftxui::Component& TToggle::Component() const {
 
 void TToggle::SelectActive(const int index) {
 	m_pButtons->SetActiveChild(m_pButtons->ChildAt(index));
-	m_iSelected.store(index);
-}
-
-int TToggle::SelectedVariant() const {
-	return m_iSelected.load();
 }
 
 }

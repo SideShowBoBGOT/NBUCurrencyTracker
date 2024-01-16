@@ -1,16 +1,16 @@
 #include <CppCurrency/Views/TUIContainer.hpp>
-#include "CppCurrency/Controllers/NNFileType.hpp"
+#include <CppCurrency/Controllers/NNFileType.hpp>
 #include <CppCurrency/Views/TToggle.hpp>
 #include <CppCurrency/Views/TCurrencyTable.hpp>
 #include <CppCurrency/Views/TIntervalModal.hpp>
 #include <CppCurrency/Models/ACurrencyData.hpp>
+#include <CppCurrency/Controllers/TController.hpp>
 #include <ftxui/component/component.hpp>
 #include <magic_enum.hpp>
 #include <format>
 
 namespace curr {
 
-static constexpr auto s_vFileTypes = magic_enum::enum_names<NFileType>();
 static constexpr std::string_view s_sFileTypeToggle = "File type      ";
 static constexpr std::string_view s_sCurrentTime 	= "Current time   ";
 static constexpr std::string_view s_sChangeInterval = "Change interval";
@@ -33,18 +33,21 @@ TUIContainer::TUIContainer() {
 	}) | m_pIntervalModal->ModalClosure();
 }
 
-NFileType TUIContainer::FileType() const {
-	return static_cast<NFileType>(m_pFileTypeToggle->SelectedVariant());
-}
-
 const ftxui::Component& TUIContainer::Component() const {
 	return m_pComponent;
 }
 
 ftxui::Component TUIContainer::CreateInitFileTypeToggle() {
-	m_pFileTypeToggle = std::make_shared<TToggle>(
-		std::vector(s_vFileTypes.begin(), s_vFileTypes.end()));
-	m_pFileTypeToggle->SelectActive(static_cast<int>(NFileType::JSON));
+	auto variants = std::vector<std::pair<std::string_view, std::function<void()>>>();
+	for(const auto& value : magic_enum::enum_values<NFileType>()) {
+		const auto name = magic_enum::enum_name(value);
+		const auto closure = [value] {
+			TController::Instance().SendMessage(NMessages::FileTypeChanged(value));
+		};
+		variants.emplace_back(name, closure);
+	}
+	m_pFileTypeToggle = std::make_shared<TToggle>(variants);
+	m_pFileTypeToggle->SelectActive(static_cast<int>(NFileType::XML));
 	const auto toggle = m_pFileTypeToggle->Component();
 	return ftxui::Renderer(toggle, [toggle]() {
 		return ftxui::hbox(

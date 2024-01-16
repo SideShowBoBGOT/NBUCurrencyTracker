@@ -17,7 +17,6 @@ class TUIContainer {
 	TUIContainer();
 
 	public:
-	NFileType FileType() const;
 	const ftxui::Component& Component() const;
 	void UpdateCurrencyTable(AProvideResult&& result);
 

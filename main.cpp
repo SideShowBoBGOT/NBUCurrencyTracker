@@ -1,8 +1,6 @@
 #include <CppCurrency/Controllers/TController.hpp>
 
 int main() {
-	auto cont = curr::TController();
-	cont.Run();
-
+	curr::TController::Instance().Run();
 	return 0;
 }

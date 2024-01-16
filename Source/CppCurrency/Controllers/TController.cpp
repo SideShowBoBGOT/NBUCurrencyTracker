@@ -12,6 +12,11 @@
 
 namespace curr {
 
+TController& TController::Instance() {
+	static auto instance = TController();
+	return instance;
+}
+
 TController::TController() {
 	const auto logger = spdlog::create_async<spdlog::sinks::basic_file_sink_mt>("ProvideLogger", "logs.txt");
 	spdlog::set_default_logger(logger);
@@ -23,6 +28,10 @@ TController::TController() {
 void TController::Run() {
 	auto clientThread = std::jthread([this]() { ClientThread(); });
 	m_xScreen.Loop(m_pUIContainer->Component());
+}
+
+void TController::SendMessage(const NMessages::Type& message) {
+	m_qMessages.Push(message);
 }
 
 void TController::ClientThread() {
@@ -40,6 +49,7 @@ void TController::ProcessMessages() {
 	switch(message.index()) {
 		case NSHelpers::VariantIndex<NMessages::Type, NMessages::IntervalChanged>(): {
 			m_pTableUpdator->Interval = std::get<NMessages::IntervalChanged>(message).Seconds;
+			// update visual
 			break;
 		}
 		case NSHelpers::VariantIndex<NMessages::Type, NMessages::FileTypeChanged>(): {
