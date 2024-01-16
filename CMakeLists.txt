@@ -10,7 +10,8 @@ add_library(${PROJECT_NAME}
         Source/CppCurrency/Views/TUIContainer.cpp
         Source/CppCurrency/Views/TCurrencyDataView.cpp
         Source/CppCurrency/Views/TCurrencyTable.cpp
-        Source/CppCurrency/Helpers/TIntervalClosure.cpp)
+        Source/CppCurrency/Helpers/TIntervalClosure.cpp
+        Source/CppCurrency/Views/TIntervalModal.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC Source)
 
 add_subdirectory(External)

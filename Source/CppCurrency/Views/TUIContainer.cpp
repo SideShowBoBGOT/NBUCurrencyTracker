@@ -2,6 +2,7 @@
 #include <CppCurrency/Models/NNFileType.hpp>
 #include <CppCurrency/Views/TToggle.hpp>
 #include <CppCurrency/Views/TCurrencyTable.hpp>
+#include <CppCurrency/Views/TIntervalModal.hpp>
 #include <CppCurrency/Models/ACurrencyData.hpp>
 #include <ftxui/component/component.hpp>
 #include <magic_enum.hpp>
@@ -10,20 +11,25 @@
 namespace curr {
 
 static constexpr auto s_vFileTypes = magic_enum::enum_names<NFileType>();
-static constexpr std::string_view s_sFileTypeToggle = "File type";
-static constexpr std::string_view s_sCurrentTime = "Current time";
+static constexpr std::string_view s_sFileTypeToggle = "File type     ";
+static constexpr std::string_view s_sCurrentTime 	= "Current time  ";
+static constexpr std::string_view s_sIntervalInput 	= "Interval input";
 
 TUIContainer::TUIContainer() {
+	const auto interval = CreateInitIntervalInput();
 	const auto toggle = CreateInitFileTypeToggle();
 	const auto table = CreateInitCurrencyTable();
-	m_pComponent = ftxui::Container::Vertical({toggle, table});
-	m_pComponent = ftxui::Renderer(m_pComponent, [toggle, table]() {
+	m_pComponent = ftxui::Container::Vertical({toggle, interval, table});
+	m_pComponent = ftxui::Renderer(m_pComponent, [toggle, interval, table]() {
 		return ftxui::vbox(
 			toggle->Render(),
 			ftxui::separator(),
 			RenderTime(),
 			ftxui::separator(),
-			table->Render()) | ftxui::borderDouble;
+			interval->Render(),
+			ftxui::separator(),
+			table->Render()
+		) | ftxui::borderDouble;
 	});
 }
 
@@ -62,6 +68,18 @@ ftxui::Element TUIContainer::RenderTime() {
 	auto tp = std::chrono::time_point_cast<std::chrono::seconds>(nanoTp);
 	auto stp = ftxui::text(std::format("{:%F %T}", tp));
 	return ftxui::hbox(ftxui::text(s_sCurrentTime.data()), ftxui::separator(), stp);
+}
+
+ftxui::Component TUIContainer::CreateInitIntervalInput() {
+	m_pIntervalInput = std::make_shared<TIntervalModal>();
+	const auto interval = m_pIntervalInput->Component();
+	return ftxui::Renderer(interval, [interval]() {
+		return ftxui::hbox(
+			ftxui::text(s_sIntervalInput.data()),
+			ftxui::separator(),
+			interval->Render()
+		);
+	});
 }
 
 }

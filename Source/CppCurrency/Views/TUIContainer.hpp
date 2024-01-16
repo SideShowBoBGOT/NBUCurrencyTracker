@@ -10,6 +10,7 @@ namespace curr {
 
 class TCurrencyTable;
 class TToggle;
+class TIntervalModal;
 
 class TUIContainer {
 	public:
@@ -23,9 +24,11 @@ class TUIContainer {
 	protected:
 	ftxui::Component CreateInitFileTypeToggle();
 	ftxui::Component CreateInitCurrencyTable();
+	ftxui::Component CreateInitIntervalInput();
 	static ftxui::Element RenderTime();
 
 	protected:
+	std::shared_ptr<TIntervalModal> m_pIntervalInput = nullptr;
 	std::shared_ptr<TCurrencyTable> m_pCurrencyTable = nullptr;
 	std::shared_ptr<TToggle> m_pFileTypeToggle = nullptr;
 	ftxui::Component m_pComponent = nullptr;
