@@ -25,3 +25,6 @@
 [submodule "External/filesystem"]
 	path = External/filesystem
 	url = https://github.com/boostorg/filesystem
+[submodule "External/FTXUI"]
+	path = External/FTXUI
+	url = https://github.com/SideShowBoBGOT/FTXUI
