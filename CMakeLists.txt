@@ -11,7 +11,9 @@ add_library(${PROJECT_NAME}
         Source/CppCurrency/Views/TCurrencyDataView.cpp
         Source/CppCurrency/Views/TCurrencyTable.cpp
         Source/CppCurrency/Helpers/TIntervalClosure.cpp
-        Source/CppCurrency/Views/TIntervalModal.cpp)
+        Source/CppCurrency/Views/TIntervalModal.cpp
+        Source/CppCurrency/Controllers/TConfig.cpp
+        Source/CppCurrency/CLI/TApplicationCLI.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC Source)
 
 add_subdirectory(External)
@@ -22,6 +24,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC magic_enum::magic_enum)
 target_link_libraries(${PROJECT_NAME} PUBLIC simdutf::simdutf)
 target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json)
 target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
+target_link_libraries(${PROJECT_NAME} PUBLIC tomlplusplus::tomlplusplus)
+target_link_libraries(${PROJECT_NAME} PUBLIC CLI11::CLI11)
 target_link_libraries(${PROJECT_NAME}
         PUBLIC ftxui::screen
         PUBLIC ftxui::dom

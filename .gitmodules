@@ -19,3 +19,12 @@
 [submodule "External/spdlog"]
 	path = External/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "External/tomlplusplus"]
+	path = External/tomlplusplus
+	url = https://github.com/marzer/tomlplusplus
+[submodule "External/CLI11"]
+	path = External/CLI11
+	url = https://github.com/CLIUtils/CLI11
+[submodule "External/filesystem"]
+	path = External/filesystem
+	url = https://github.com/boostorg/filesystem

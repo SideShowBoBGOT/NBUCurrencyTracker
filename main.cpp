@@ -1,6 +1,7 @@
-#include <CppCurrency/Controllers/TController.hpp>
+#include <CppCurrency/CLI/TApplicationCLI.hpp>
 
-int main() {
-	curr::TController::Instance().Run();
+int main(int argc, char *argv[]) {
+	auto cli = curr::TApplicationCLI();
+	CLI11_PARSE(cli, argc, argv);
 	return 0;
 }

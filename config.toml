@@ -1,0 +1,10 @@
+logFile = "logs.txt"
+outputFile = "output.txt"
+
+# fileType = "json"
+fileType = "xml"
+
+[interval]
+hours = 1
+minutes = 1
+seconds = 1
