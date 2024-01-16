@@ -22,9 +22,6 @@
 [submodule "External/CLI11"]
 	path = External/CLI11
 	url = https://github.com/CLIUtils/CLI11
-[submodule "External/filesystem"]
-	path = External/filesystem
-	url = https://github.com/boostorg/filesystem
 [submodule "External/FTXUI"]
 	path = External/FTXUI
 	url = https://github.com/SideShowBoBGOT/FTXUI
