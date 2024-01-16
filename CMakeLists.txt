@@ -27,6 +27,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${PROJECT_NAME} PUBLIC tomlplusplus::tomlplusplus)
 target_link_libraries(${PROJECT_NAME} PUBLIC CLI11::CLI11)
 target_link_libraries(${PROJECT_NAME}
+
+        PUBLIC Boost::filesystem)
+target_link_libraries(${PROJECT_NAME}
         PUBLIC ftxui::screen
         PUBLIC ftxui::dom
         PUBLIC ftxui::component
