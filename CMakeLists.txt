@@ -16,8 +16,25 @@ add_library(${PROJECT_NAME}
         Source/CppCurrency/CLI/TApplicationCLI.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC Source)
 
+# Boost::filesystem
+
+set(BOOST_INCLUDE_LIBRARIES filesystem system)
+set(BOOST_ENABLE_CMAKE ON)
+
+include(FetchContent)
+FetchContent_Declare(
+  Boost
+  GIT_REPOSITORY https://github.com/boostorg/boost.git
+  GIT_TAG boost-1.74.0
+  GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(Boost)
+target_link_libraries(${PROJECT_NAME} PUBLIC Boost::filesystem)
+
+# other libs
+target_link_libraries(${PROJECT_NAME} PUBLIC httplib::httplib)
+
 add_subdirectory(External)
-add_subdirectory(FTXUI)
 target_link_libraries(${PROJECT_NAME} PUBLIC httplib::httplib)
 target_link_libraries(${PROJECT_NAME} PUBLIC pugixml::pugixml)
 target_link_libraries(${PROJECT_NAME} PUBLIC magic_enum::magic_enum)
@@ -26,9 +43,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json::nlohmann_json)
 target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${PROJECT_NAME} PUBLIC tomlplusplus::tomlplusplus)
 target_link_libraries(${PROJECT_NAME} PUBLIC CLI11::CLI11)
-target_link_libraries(${PROJECT_NAME}
-
-        PUBLIC Boost::filesystem)
+target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
 target_link_libraries(${PROJECT_NAME}
         PUBLIC ftxui::screen
         PUBLIC ftxui::dom

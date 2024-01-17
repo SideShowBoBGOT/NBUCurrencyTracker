@@ -25,3 +25,6 @@
 [submodule "External/FTXUI"]
 	path = External/FTXUI
 	url = https://github.com/SideShowBoBGOT/FTXUI
+[submodule "External/fmt"]
+	path = External/fmt
+	url = https://github.com/fmtlib/fmt

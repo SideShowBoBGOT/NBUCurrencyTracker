@@ -17,10 +17,10 @@ class TConfig {
 	TConfig()=default;
 
 	protected:
-	std::filesystem::path m_sLogFile;
-	std::filesystem::path m_sOutputFile;
+	std::string m_sLogFileName;
+	std::string m_sOutputFileName;
+	std::chrono::seconds m_tInterval = std::chrono::seconds(0);
 	NFileType m_xFileType = NFileType::XML;
-
 };
 
 }

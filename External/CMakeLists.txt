@@ -7,5 +7,5 @@ add_subdirectory(json)
 add_subdirectory(spdlog)
 add_subdirectory(tomlplusplus)
 add_subdirectory(CLI11)
-
-add_subdirectory(filesystem)
+add_subdirectory(FTXUI)
+add_subdirectory(fmt)
