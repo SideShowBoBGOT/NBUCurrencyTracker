@@ -3,6 +3,7 @@
 #include <CppCurrency/Controllers/NSProvider.hpp>
 #include <CppCurrency/Helpers/NSHelpers.hpp>
 #include <CppCurrency/Helpers/TIntervalClosure.hpp>
+#include <CppCurrency/Controllers/TConfig.hpp>
 
 #include <spdlog/spdlog.h>
 #include <spdlog/async.h>
@@ -12,16 +13,20 @@
 
 namespace curr {
 
+static constexpr std::string_view s_sLoggerName = "ProvideLogger";
+
 TController& TController::Instance() {
 	static auto instance = TController();
 	return instance;
 }
 
 TController::TController() {
-	const auto logger = spdlog::create_async<spdlog::sinks::basic_file_sink_mt>("ProvideLogger", "logs.txt");
+	const auto logger = spdlog::create_async<spdlog::sinks::basic_file_sink_mt>(
+		s_sLoggerName.data(), TConfig::Instance().LogFileName());
 	spdlog::set_default_logger(logger);
-	InitTableUpdator(std::chrono::seconds(5));
+	InitTableUpdator(TConfig::Instance().Interval());
 	InitUiTimeUpdator();
+	m_xFileType = TConfig::Instance().FileType();
 	m_pUIContainer = std::make_shared<TUIContainer>();
 }
 
@@ -48,8 +53,11 @@ void TController::ProcessMessages() {
 	const auto& message = messageOpt.value();
 	switch(message.index()) {
 		case NSHelpers::VariantIndex<NMessages::Type, NMessages::IntervalChanged>(): {
-			m_pTableUpdator->Interval = std::get<NMessages::IntervalChanged>(message).Seconds;
-			// update visual
+			m_pTableUpdator->Interval = std::get<NMessages::IntervalChanged>(message).Millis;
+			m_xScreen.Post([this]() mutable {
+				m_pUIContainer->UpdateInterval(m_pTableUpdator->Interval);
+			});
+			m_xScreen.PostEvent(ftxui::Event::Custom);
 			break;
 		}
 		case NSHelpers::VariantIndex<NMessages::Type, NMessages::FileTypeChanged>(): {
@@ -59,8 +67,8 @@ void TController::ProcessMessages() {
 	}
 }
 
-void TController::InitTableUpdator(std::chrono::seconds seconds) {
-	m_pTableUpdator = std::make_shared<TIntervalClosure>(seconds, [this]() {
+void TController::InitTableUpdator(std::chrono::milliseconds millis) {
+	m_pTableUpdator = std::make_shared<TIntervalClosure>(millis, [this]() {
 		m_xScreen.Post([this, data=NSProvider::Do(m_xFileType)]() mutable {
 			m_pUIContainer->UpdateCurrencyTable(std::move(data));
 		});

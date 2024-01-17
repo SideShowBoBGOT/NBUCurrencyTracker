@@ -16,10 +16,16 @@ class TConfig {
 	protected:
 	TConfig()=default;
 
+	public:
+	const std::string& LogFileName() const;
+	const std::string& OutputFileName() const;
+	std::chrono::milliseconds Interval() const;
+	NFileType FileType() const;
+
 	protected:
 	std::string m_sLogFileName;
 	std::string m_sOutputFileName;
-	std::chrono::seconds m_tInterval = std::chrono::seconds(0);
+	std::chrono::milliseconds m_tInterval = std::chrono::milliseconds(0);
 	NFileType m_xFileType = NFileType::XML;
 };
 

@@ -1,4 +1,5 @@
 #include <CppCurrency/Controllers/NSProvider.hpp>
+#include <CppCurrency/Controllers/TConfig.hpp>
 
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -24,7 +25,6 @@ static const std::string s_sCc = "cc";
 static const std::string s_sExchangeDate = "exchangedate";
 static const std::string s_sExchange = "exchange";
 static const std::string s_sCurrency = "currency";
-static const std::string s_sOutputFile = "output.txt";
 static const std::string s_sLoggerName = "ProvideLogger";
 static const std::string s_sSaveDataToReport = "SaveDataToReport: ";
 static const std::string s_sReadJson = "ReadJson: ";
@@ -70,13 +70,13 @@ static ASaveDataResult SaveDataToReport(const curr::NFileType fileType) {
 		const auto status = static_cast<httplib::StatusCode>(result->status);
 		return LogError(s_sSaveDataToReport + std::string(magic_enum::enum_name(status)));
 	}
-	std::ofstream(s_sOutputFile) << result->body;
+	std::ofstream(TConfig::Instance().OutputFileName()) << result->body;
 	return std::monostate{};
 }
 
 static AProvideResult ReadXml() {
 	auto xmlDocument = pugi::xml_document();
-	const auto parseResult = xmlDocument.load_file(s_sOutputFile.data());
+	const auto parseResult = xmlDocument.load_file(TConfig::Instance().OutputFileName().data());
 	if(not parseResult) {
 		return LogError(s_sReadXml + parseResult.description());
 	}
@@ -92,7 +92,7 @@ static AProvideResult ReadXml() {
 }
 
 static AProvideResult ReadJson() {
-	auto document = std::ifstream(s_sOutputFile);
+	auto document = std::ifstream(TConfig::Instance().OutputFileName());
 	if(not document.is_open()) {
 		return LogError(s_sReadJson + s_sJsonFileNotOpen);
 	}

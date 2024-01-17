@@ -5,6 +5,7 @@
 #include <CppCurrency/Views/TIntervalModal.hpp>
 #include <CppCurrency/Models/ACurrencyData.hpp>
 #include <CppCurrency/Controllers/TController.hpp>
+#include <CppCurrency/Controllers/TConfig.hpp>
 #include <ftxui/component/component.hpp>
 #include <magic_enum.hpp>
 #include <format>
@@ -14,6 +15,7 @@ namespace curr {
 static constexpr std::string_view s_sFileTypeToggle = "File type      ";
 static constexpr std::string_view s_sCurrentTime 	= "Current time   ";
 static constexpr std::string_view s_sChangeInterval = "Change interval";
+static constexpr std::string_view s_sMs = "ms";
 
 TUIContainer::TUIContainer() {
 	const auto changeIntervalButton = CreateChangeIntervalButton();
@@ -47,7 +49,7 @@ ftxui::Component TUIContainer::CreateInitFileTypeToggle() {
 		variants.emplace_back(name, closure);
 	}
 	m_pFileTypeToggle = std::make_shared<TToggle>(variants);
-	m_pFileTypeToggle->SelectActive(static_cast<int>(NFileType::XML));
+	m_pFileTypeToggle->SelectActive(static_cast<int>(TConfig::Instance().FileType()));
 	const auto toggle = m_pFileTypeToggle->Component();
 	return ftxui::Renderer(toggle, [toggle]() {
 		return ftxui::hbox(
@@ -77,13 +79,25 @@ ftxui::Component TUIContainer::CreateChangeIntervalButton() {
 	m_pIntervalModal = std::make_shared<TIntervalModal>();
 	auto button = ftxui::Button(s_sChangeInterval.data(),
 		[this] { m_pIntervalModal->Show(true); }, ftxui::ButtonOption::Animated());
-	return ftxui::Renderer(button, [button]() {
+	m_pInterval = ftxui::Container::Vertical({});
+	UpdateInterval(TConfig::Instance().Interval());
+	const auto cont = ftxui::Container::Horizontal({
+		button, m_pInterval
+	});
+	return ftxui::Renderer(cont, [this, button]() {
 		return ftxui::hbox(
 			button->Render(),
 			ftxui::separator(),
-			ftxui::text("")
+			m_pInterval->Render()
 		);
 	});
+}
+
+void TUIContainer::UpdateInterval(const std::chrono::milliseconds millis) {
+	m_pInterval->DetachAllChildren();
+	m_pInterval->Add(ftxui::Renderer([millis]{
+		return ftxui::text(std::to_string(millis.count()) + s_sMs.data());
+	}));
 }
 
 }

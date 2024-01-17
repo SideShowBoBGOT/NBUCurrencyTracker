@@ -18,8 +18,6 @@ class TIntervalModal {
 	static auto FilterDigits(std::string* s);
 
 	protected:
-	ftxui::Component m_pHoursInput = nullptr;
-	ftxui::Component m_pMinutesInput = nullptr;
 	ftxui::Component m_pSecondsInput = nullptr;
 
 	protected:
@@ -27,11 +25,8 @@ class TIntervalModal {
 	void OnReturnButton();
 
 	protected:
-	std::string m_sHours;
-	std::string m_sMinutes;
-	std::string m_sSeconds;
-
-	protected:
+	std::string m_sMillis;
+	std::string m_sPrevSeconds;
 
 	protected:
 	bool m_bIsShow = false;

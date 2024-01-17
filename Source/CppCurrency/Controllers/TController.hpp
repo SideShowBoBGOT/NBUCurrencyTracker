@@ -25,7 +25,7 @@ class TController {
 	protected:
 	void ClientThread();
 	void ProcessMessages();
-	void InitTableUpdator(std::chrono::seconds seconds);
+	void InitTableUpdator(std::chrono::milliseconds millis);
 	void InitUiTimeUpdator();
 
 	protected:

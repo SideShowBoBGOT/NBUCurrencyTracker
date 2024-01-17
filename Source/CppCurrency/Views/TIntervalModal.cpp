@@ -1,20 +1,19 @@
 #include <CppCurrency/Views/TIntervalModal.hpp>
-#include <CppCurrency/Helpers/NSHelpers.hpp>
+#include <CppCurrency/Controllers/TController.hpp>
+#include <CppCurrency/Controllers/TConfig.hpp>
 #include <ftxui/component/component.hpp>
 
 namespace curr {
 
-static constexpr std::string_view s_sHours 		= "Hours  ";
-static constexpr std::string_view s_sMinutes 	= "Minutes";
-static constexpr std::string_view s_sSeconds 	= "Seconds";
-static constexpr std::string_view s_sApply 		= "Apply  ";
-static constexpr std::string_view s_sReturn 	= "Return ";
+static constexpr std::string_view s_sMillis 	= "Millis";
+static constexpr std::string_view s_sApply 		= "Apply ";
+static constexpr std::string_view s_sReturn 	= "Return";
+static constexpr std::string_view s_sZero 		= "0";
 static constexpr auto s_uMaxInput = 10u;
-static constexpr auto s_uHourSeconds = 3600u;
-static constexpr auto s_uMinutesSeconds = 60u;
 
 auto TIntervalModal::FilterDigits(std::string* s) {
 	return [s](ftxui::Event event) {
+		if(event == ftxui::Event::Return) return true;
 		return event.is_character()
 			and (
 				not std::isdigit(event.character()[0])
@@ -24,21 +23,17 @@ auto TIntervalModal::FilterDigits(std::string* s) {
 }
 
 TIntervalModal::TIntervalModal() {
-	m_pHoursInput = ftxui::Input(&m_sHours, s_sHours.data()) | ftxui::CatchEvent(FilterDigits(&m_sHours));
-	m_pMinutesInput = ftxui::Input(&m_sMinutes, s_sMinutes.data()) | ftxui::CatchEvent(FilterDigits(&m_sMinutes));
-	m_pSecondsInput = ftxui::Input(&m_sSeconds, s_sSeconds.data()) | ftxui::CatchEvent(FilterDigits(&m_sSeconds));
+	m_sMillis = std::to_string(TConfig::Instance().Interval().count());
+	m_sPrevSeconds = m_sMillis;
+	m_pSecondsInput = ftxui::Input(&m_sMillis, s_sZero.data()) | ftxui::CatchEvent(FilterDigits(&m_sMillis));
 
 	auto timeUnitsInput = ftxui::Container::Vertical({
-		m_pHoursInput,
-		m_pMinutesInput,
 		m_pSecondsInput
 	});
 
 	timeUnitsInput = ftxui::Renderer(timeUnitsInput, [this]() {
 		return ftxui::vbox(
-			ftxui::hbox(ftxui::text(s_sHours.data()), ftxui::separator(), m_pHoursInput->Render()),
-			ftxui::hbox(ftxui::text(s_sMinutes.data()), ftxui::separator(), m_pMinutesInput->Render()),
-			ftxui::hbox(ftxui::text(s_sSeconds.data()), ftxui::separator(), m_pSecondsInput->Render())
+			ftxui::hbox(ftxui::text(s_sMillis.data()), ftxui::separator(), m_pSecondsInput->Render())
 		);
 	});
 
@@ -57,7 +52,7 @@ TIntervalModal::TIntervalModal() {
 	});
 
 	auto component = ftxui::Container::Vertical({timeUnitsInput, buttons});
-	component = ftxui::Renderer(component, [timeUnitsInput, buttons] {
+	component = ftxui::Renderer(component, [this, timeUnitsInput, buttons] {
 		return ftxui::vbox(
 			timeUnitsInput->Render(),
 			ftxui::separator(),
@@ -70,6 +65,7 @@ TIntervalModal::TIntervalModal() {
 
 void TIntervalModal::Show(const bool isShow) {
 	m_bIsShow = isShow;
+	m_sMillis = m_sPrevSeconds;
 }
 
 const TIntervalModal::TModalClosure& TIntervalModal::ModalClosure() const {
@@ -77,16 +73,16 @@ const TIntervalModal::TModalClosure& TIntervalModal::ModalClosure() const {
 }
 
 void TIntervalModal::OnApplyButton() {
-	const auto hours = std::stoll(m_sHours) * s_uHourSeconds;
-	const auto minutes = std::stoll(m_sMinutes) * s_uMinutesSeconds;
-	const auto seconds = std::stoll(m_sSeconds);
-	const auto totalSeconds = std::chrono::seconds(hours + minutes + seconds);
-	if(totalSeconds.count() == 0) {
-
+	if(m_sMillis.empty()) {
 		return;
 	}
-
-
+	const auto millis = std::chrono::milliseconds(std::stoll(m_sMillis));
+	if(millis.count() == 0) {
+		return;
+	}
+	m_sPrevSeconds = m_sMillis;
+	TController::Instance().SendMessage(NMessages::IntervalChanged(millis));
+	Show(false);
 }
 
 void TIntervalModal::OnReturnButton() {
