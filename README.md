@@ -9,7 +9,7 @@ rates using data from the National Bank of Ukraine (NBU) API.
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
-- [External libraries](#externallibs)
+- [Libraries](#libraries)
 - [License](#license)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -58,7 +58,7 @@ If any issues encountered while trying to fetch the data from the API or save it
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## External libraries
+## Libraries
 
 
 
