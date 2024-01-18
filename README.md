@@ -10,6 +10,8 @@ rates using data from the National Bank of Ukraine (NBU) API.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Libraries](#libraries)
+- [Code structure](#code-structure)
+- [Contact](#contact)
 - [License](#license)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -64,7 +66,7 @@ The project uses a number of external libraries:
 * [CLI11](https://github.com/CLIUtils/CLI11) is used to simplify creation of command line interfaces.
 * [cpp-httplib](https://github.com/yhirose/cpp-httplib) is used to make calls to the NBU API.
 * [fmt](https://github.com/fmtlib/fmt) is used to simplify formatting strings. Also it provides more functionalities than C++20 formatting library.
-* [FTXUI](https://github.com/SideShowBoBGOT/FTXUI) is text user interface library. Due to the fact that many classes are declared inside .cpp-files, it has been forked and some changes were made.
+* [FTXUI](https://github.com/SideShowBoBGOT/FTXUI) is text user interface library. Due to the fact that many classes are declared inside .cpp-files, it has been forked and some changes have been made.
 * [json](https://github.com/nlohmann/json) is used to parse json data.
 * [magic_enum](https://github.com/Neargye/magic_enum) is used to simplify usage of enums in C++. It provides iteration over enums, convertion to strings etc.
 * [pugixml](https://github.com/zeux/pugixml) is used to parse xml data.
@@ -73,5 +75,38 @@ The project uses a number of external libraries:
 * [tomlplusplus](https://github.com/marzer/tomlplusplus) is used to parse [TOML](https://toml.io/en/) configuration files.
 * [Boost.filesystem](https://github.com/boostorg/filesystem) is used to check portability of file names. This functionality is not present in C++ standard filesystem library.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<a name="#code-structure"></a>
+
+## Code structure
+The apllication has [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) architecture. The code is divided into 4 directories:
+1. CLI:
+    - TApplicationCLI - class responsible for providing CLI interface to the user.
+2. Controllers:
+    - TController - singleton class that provides functionality to send the message to data provider thread. It also contains UI container and starts the provider thread.
+    - TConfig - singleton class responsible for validation of config values.
+    - NSProvider - namespace which provides functionality of sending requests to the NBU API and fetching data from it.
+    - NNFileType - enum of output file format.
+    - NAMessages - a collection of messages that can be sent to the provider thread.
+3. Models:
+    - ACurrencyData - a collection of type aliases for the currency data.
+4. Views is the directory for TUI classes:
+    - TCurrencyDataView - a text representation of currency data.
+    - TCurrencyTable - a view to represent all currency data as a table.
+    - TIntervalModal - a modal form that is responsible for the validation of the interval the user inputted.
+    - TToggle - a toggle button class. It used to switch between the output file formats.
+    - TUIContainer - a class that represent the whole user interface.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contact
 
 
+
+Serhii Panchenko - [@sideshowbobgot](https://t.me/sideshowbobgot) - sideshowbobgot@gmail.com
+
+Project Link: [https://github.com/SideShowBoBGOT/NBUCurrencyTracker](https://github.com/SideShowBoBGOT/NBUCurrencyTracker)
+
+## License
+This project is licensed under the [MIT License](https://mit-license.org/).
