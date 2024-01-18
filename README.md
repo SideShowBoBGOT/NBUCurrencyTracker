@@ -108,5 +108,9 @@ Serhii Panchenko - [@sideshowbobgot](https://t.me/sideshowbobgot) - sideshowbobg
 
 Project Link: [https://github.com/SideShowBoBGOT/NBUCurrencyTracker](https://github.com/SideShowBoBGOT/NBUCurrencyTracker)
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## License
 This project is licensed under the [MIT License](https://mit-license.org/).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
