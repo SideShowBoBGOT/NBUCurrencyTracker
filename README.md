@@ -9,7 +9,7 @@ rates using data from the National Bank of Ukraine (NBU) API.
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
+- [External libraries](#externallibs)
 - [License](#license)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -55,6 +55,10 @@ An user can dynamically change the type of the data format of the output file: J
 If any issues encountered while trying to fetch the data from the API or save it to the file, a corresponding message appears:
 
 ![Screenshot](Docs/Screenshot%20from%202024-01-18%2010-49-14.png)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## External libraries
 
 
 
