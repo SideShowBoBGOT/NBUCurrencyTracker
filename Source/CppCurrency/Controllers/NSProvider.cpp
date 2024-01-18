@@ -16,8 +16,8 @@ namespace curr::NSProvider {
 static const std::string s_sNbuUrl = "https://bank.gov.ua";
 static const std::string s_sXmlUrl = "/NBUStatService/v1/statdirectory/exchangenew";
 static const std::string s_sJsonUrl = "/NBUStatService/v1/statdirectory/exchangenew?json";
-static const std::string s_sJsonFileNotOpen = "JSON: File not open";
-static const std::string s_sJsonParseFailed = "JSON: Parse failed";
+static const std::string s_sCanNotReadOutputFile = "Can not read the output file";
+static const std::string s_sJsonParseFailed = "Parse failed";
 static const std::string s_sR030 = "r030";
 static const std::string s_sTxt = "txt";
 static const std::string s_sRate = "rate";
@@ -27,6 +27,7 @@ static const std::string s_sExchange = "exchange";
 static const std::string s_sCurrency = "currency";
 static const std::string s_sLoggerName = "ProvideLogger";
 static const std::string s_sSaveDataToReport = "SaveDataToReport: ";
+static const std::string s_sCanNotWriteOutputFile = "Can not write to the output file";
 static const std::string s_sReadJson = "ReadJson: ";
 static const std::string s_sReadXml = "ReadXml: ";
 static const std::string s_sLoggedJson = "Logged Json";
@@ -38,14 +39,16 @@ static std::shared_ptr<spdlog::logger> GetLogger() {
 	return spdlog::get(s_sLoggerName);
 }
 
-static void LogFlush(const std::string& msg) {
+static void LogInfo(const std::string& msg) {
 	auto logger = GetLogger();
-	logger->error(msg);
+	logger->info(msg);
 	logger->flush();
 }
 
 static ACurrencyError LogError(const std::string& msg) {
-	LogFlush(msg);
+	auto logger = GetLogger();
+	logger->error(msg);
+	logger->flush();
 	return msg;
 }
 
@@ -70,13 +73,17 @@ static ASaveDataResult SaveDataToReport(const curr::NFileType fileType) {
 		const auto status = static_cast<httplib::StatusCode>(result->status);
 		return LogError(s_sSaveDataToReport + std::string(magic_enum::enum_name(status)));
 	}
-	std::ofstream(TConfig::Instance().OutputFileName()) << result->body;
+	auto outputFile = std::ofstream(TConfig::Instance().OutputFileName());
+	if(not outputFile.is_open()) {
+		return LogError(s_sSaveDataToReport + s_sCanNotWriteOutputFile);
+	}
+	outputFile << result->body;
 	return std::monostate{};
 }
 
 static AProvideResult ReadXml() {
 	auto xmlDocument = pugi::xml_document();
-	const auto parseResult = xmlDocument.load_file(TConfig::Instance().OutputFileName().data());
+	const auto parseResult = xmlDocument.load_file(TConfig::Instance().OutputFileName().c_str());
 	if(not parseResult) {
 		return LogError(s_sReadXml + parseResult.description());
 	}
@@ -87,14 +94,14 @@ static AProvideResult ReadXml() {
 			currency.child(s_sRate.data()).child_value(), currency.child(s_sCc.data()).child_value(),
 			currency.child(s_sExchangeDate.data()).child_value()});
 	}
-	LogFlush(s_sLoggedXML);
+	LogInfo(s_sLoggedXML);
 	return data;
 }
 
 static AProvideResult ReadJson() {
 	auto document = std::ifstream(TConfig::Instance().OutputFileName());
 	if(not document.is_open()) {
-		return LogError(s_sReadJson + s_sJsonFileNotOpen);
+		return LogError(s_sReadJson + s_sCanNotReadOutputFile);
 	}
 	auto jsonData = nlohmann::json::parse(document, nullptr, false);
 	if(jsonData.is_discarded()) {
@@ -107,7 +114,7 @@ static AProvideResult ReadJson() {
 			to_string(record[s_sRate]), record[s_sCc],
 			record[s_sExchangeDate]});
 	}
-	LogFlush(s_sLoggedJson);
+	LogInfo(s_sLoggedJson);
 	return data;
 }
 

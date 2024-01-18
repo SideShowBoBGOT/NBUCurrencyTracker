@@ -1,10 +1,6 @@
-logFile = "logs.txt"
-outputFile = "output.txt"
-
-# fileType = "json"
-fileType = "xssml"
-
-[interval]
-
-minutes = 1
-seconds = 1
+# Working directory is set to the one where the config is located
+logFileName = "logs.txt"
+outputFileName = "out.txt"
+fileType = "JSON"
+#fileType = "XML"
+intervalMillis = 2000

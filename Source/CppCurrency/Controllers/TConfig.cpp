@@ -1,8 +1,8 @@
 #include <CppCurrency/Controllers/TConfig.hpp>
 #include <magic_enum.hpp>
 #include <toml++/toml.hpp>
-#include <boost/filesystem.hpp>
 #include <fmt/core.h>
+#include <boost/filesystem.hpp>
 #include <fmt/ranges.h>
 #include <iostream>
 #include <limits>

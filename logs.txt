@@ -1,0 +1,8 @@
+[2024-01-18 08:52:56.108] [ProvideLogger] [info] Logged Json
+[2024-01-18 08:52:58.008] [ProvideLogger] [info] Logged Json
+[2024-01-18 08:53:00.104] [ProvideLogger] [info] Logged Json
+[2024-01-18 08:53:02.008] [ProvideLogger] [info] Logged Json
+[2024-01-18 08:53:04.101] [ProvideLogger] [info] Logged Json
+[2024-01-18 08:53:06.112] [ProvideLogger] [info] Logged XML
+[2024-01-18 08:53:08.002] [ProvideLogger] [info] Logged XML
+[2024-01-18 08:53:10.090] [ProvideLogger] [info] Logged XML

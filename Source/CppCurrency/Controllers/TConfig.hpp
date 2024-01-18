@@ -1,8 +1,8 @@
 #ifndef CPPCURRENCY_TCONFIG_HPP
 #define CPPCURRENCY_TCONFIG_HPP
 
-#include <filesystem>
 #include <CppCurrency/Controllers/NNFileType.hpp>
+#include <filesystem>
 
 namespace curr {
 
