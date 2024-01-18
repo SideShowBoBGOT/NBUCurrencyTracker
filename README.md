@@ -41,5 +41,21 @@ intervalMillis = 2000
 ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Usage
+
+### User Interface
+
+An user can dynamically change the type of the data format of the output file: JSON or XML. And also the user can change the interval between updates in seconds:
+
+![Screenshot](Docs/Screenshot%20from%202024-01-18%2009-20-29.png)
+![Screenshot](Docs/Screenshot%20from%202024-01-18%2010-45-11.png)
+
+### Error messages
+
+If any issues encountered while trying to fetch the data from the API or save it to the file, a corresponding message appears:
+
+![Screenshot](Docs/Screenshot%20from%202024-01-18%2010-49-14.png)
+
+
 
 
