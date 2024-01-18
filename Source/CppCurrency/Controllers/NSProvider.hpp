@@ -1,7 +1,7 @@
 #ifndef CPPCURRENCY_NSPROVIDER_HPP
 #define CPPCURRENCY_NSPROVIDER_HPP
 
-#include "NNFileType.hpp"
+#include <CppCurrency/Controllers/NNFileType.hpp>
 #include <CppCurrency/Models/ACurrencyData.hpp>
 #include <filesystem>
 #include <memory>

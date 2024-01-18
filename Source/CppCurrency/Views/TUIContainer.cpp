@@ -16,6 +16,7 @@ static constexpr std::string_view s_sFileTypeToggle = "File type      ";
 static constexpr std::string_view s_sCurrentTime 	= "Current time   ";
 static constexpr std::string_view s_sChangeInterval = "Change interval";
 static constexpr std::string_view s_sMs = "ms";
+static constexpr auto s_tGMTPlusTwo = std::chrono::hours(2);
 
 TUIContainer::TUIContainer() {
 	const auto changeIntervalButton = CreateChangeIntervalButton();
@@ -70,7 +71,7 @@ void TUIContainer::UpdateCurrencyTable(AProvideResult&& result) {
 
 ftxui::Element TUIContainer::RenderTime() {
 	const auto nanoTp = std::chrono::system_clock::now();
-	auto tp = std::chrono::time_point_cast<std::chrono::seconds>(nanoTp);
+	auto tp = std::chrono::time_point_cast<std::chrono::seconds>(nanoTp) + s_tGMTPlusTwo;
 	auto stp = ftxui::text(std::format("{:%F %T}", tp));
 	return ftxui::hbox(ftxui::text(s_sCurrentTime.data()), ftxui::separator(), stp);
 }
